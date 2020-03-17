@@ -36,6 +36,7 @@ TvShowsStack.navigationOptions = {
   drawerLabel: "TV Shows",
   drawerIcon: <MaterialIcons name="tv" size={24}></MaterialIcons>
 };
+
 function CustomDrawerContentComponent(props) {
   return (
     <ScrollView>
@@ -106,5 +107,5 @@ class LoaderContainer extends React.Component {
     return <AppContainer></AppContainer>;
   }
 }
+
 export default LoaderContainer;
-// App = createAppContainer(AppDrawerNavigator);

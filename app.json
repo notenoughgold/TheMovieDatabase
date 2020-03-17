@@ -5,10 +5,13 @@
     "name": "TheMovieDatabase",
     "slug": "themoviedatabase",
     "privacy": "unlisted",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "36.0.0",
     "version": "0.0.1",
-    "entryPoint": ".vscode\\exponentIndex.js",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "android": {
       "package": "com.altayiskender.themoviedb"
     }
