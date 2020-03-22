@@ -18,12 +18,6 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default class MovieDetailsScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.getParam("movieTitle")
-    };
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +33,7 @@ export default class MovieDetailsScreen extends React.Component {
   }
   componentDidMount() {
     console.log("componentDidMount");
-    this.fetchMovieDetails(this.props.navigation.getParam("movieId"));
+    this.fetchMovieDetails(this.props.route.params?.movieId);
   }
 
   renderGenreChips(genres) {

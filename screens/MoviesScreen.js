@@ -1,29 +1,12 @@
 import React from "react";
 import { View, ActivityIndicator, Image, Dimensions } from "react-native";
-import { FlatList } from "react-navigation";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 
 import { fetchPopularMoviesAsync, getImageLink } from "../data/Repository";
-import { MaterialHeaderButtons, Item } from "../components/MdHeaderButton";
 
 const screenWidth = Dimensions.get("window").width;
 
 export default class HomeScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: "Movies",
-      headerLeft: (
-        <MaterialHeaderButtons>
-          <Item
-            title="Toggle Drawer"
-            iconName="menu"
-            onPress={() => navigation.toggleDrawer()}
-          />
-        </MaterialHeaderButtons>
-      )
-    };
-  };
-
   constructor(props) {
     super(props);
     this.state = {

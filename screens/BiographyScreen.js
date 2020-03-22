@@ -3,16 +3,12 @@ import { Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default class AllCreditsScreen extends React.Component {
-  static navigationOptions = {
-    title: "Biography"
-  };
-
   constructor(props) {
     super(props);
   }
 
   render() {
-    const biography = this.props.navigation.getParam("biography");
+    const biography = this.props.route.params?.biography;
 
     return (
       <ScrollView style={{ flex: 1 }}>

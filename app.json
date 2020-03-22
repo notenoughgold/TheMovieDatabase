@@ -14,6 +14,9 @@
     ],
     "android": {
       "package": "com.altayiskender.themoviedb"
+    },
+    "splash": {
+      "image": "./assets/images/tmdb-logo.png"
     }
   }
 }

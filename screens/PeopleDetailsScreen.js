@@ -12,11 +12,11 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 export default class PeopleDetailsScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: navigation.getParam("peopleName")
-    };
-  };
+  // static navigationOptions = ({ navigation }) => {
+  //   return {
+  //     title: navigation.getParam("peopleName")
+  //   };
+  // };
 
   constructor(props) {
     super(props);
@@ -33,11 +33,11 @@ export default class PeopleDetailsScreen extends React.Component {
   }
   componentDidMount() {
     console.log("componentDidMount");
-    this.fetchPeopleDetails(this.props.navigation.getParam("peopleId"));
+    this.fetchPeopleDetails(this.props.route.params?.peopleId);
   }
 
   render() {
-    const ifCast = this.props.navigation.getParam("ifCast");
+    const ifCast = this.props.route.params?.ifCast;
 
     if (this.state.peopleResponse != null) {
       var people = this.state.peopleResponse;

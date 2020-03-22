@@ -1,24 +1,18 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
-import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
+import { View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+
 import MovieDetailsCreditItem from "../components/MovieDetailsCreditItem";
 
 export default class AllCreditsScreen extends React.Component {
-  static navigationOptions = ({ navigation }) => {
-    var str = navigation.getParam("ifCast") ? "Cast" : "Crew";
-    return {
-      title: str
-    };
-  };
-
   constructor(props) {
     super(props);
   }
 
   render() {
-    const { navigation } = this.props;
-    const credits = navigation.getParam("credits");
-    const ifCast = navigation.getParam("ifCast");
+    const { route } = this.props;
+    const credits = route.params?.credits;
+    const ifCast = route.params?.ifCast;
 
     return (
       <View
