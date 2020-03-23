@@ -1,8 +1,12 @@
 import React from "react";
 import { TouchableOpacity, Image, View, Text } from "react-native";
+import { useTheme } from "@react-navigation/native";
+
 import { getImageLink } from "../data/Repository";
 
 export default function MovieDetailsCreditItem({ item, ifCast, onPress }) {
+  const { colors } = useTheme();
+
   var str;
   if (ifCast) {
     str = item.character;
@@ -35,8 +39,11 @@ export default function MovieDetailsCreditItem({ item, ifCast, onPress }) {
         )}
 
         <View style={{ justifyContent: "center", paddingStart: 16 }}>
-          <Text style={{ fontSize: 16 }}> {item.name} </Text>
-          {str.length > 0 && <Text style={{ fontStyle: "italic" }}>{str}</Text>}
+          <Text style={{ color: colors.text, fontSize: 16 }}>
+            {" "}
+            {item.name}{" "}
+          </Text>
+          {str.length > 0 && <Text style={{color: colors.text, fontStyle: "italic" }}>{str}</Text>}
         </View>
       </View>
     </TouchableOpacity>

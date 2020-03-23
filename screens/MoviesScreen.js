@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, ActivityIndicator, Image, Dimensions } from "react-native";
 import { TouchableOpacity, FlatList } from "react-native-gesture-handler";
 
@@ -6,86 +6,50 @@ import { fetchPopularMoviesAsync, getImageLink } from "../data/Repository";
 
 const screenWidth = Dimensions.get("window").width;
 
-export default class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      page: 1,
-      isLoading: true,
-      loadingMore: false,
-      error: null,
-      moviesList: []
-    };
-  }
+export default function HomeScreen({ route, navigation }) {
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [error, setError] = useState(null);
+  const [moviesList, setMoviesList] = useState([]);
 
-  mergeResponseToOldRes(response, page) {
+  const mergeResponseToOldRes = (response, page) => {
     if (page === 1) {
       return response.results;
     } else {
-      return [...this.state.moviesList, ...response.results];
+      return [...moviesList, ...response.results];
     }
-  }
+  };
 
-  async fetchPopularMovies() {
+  const fetchPopularMovies = async () => {
     try {
-      var response = await fetchPopularMoviesAsync(this.state.page);
-      this.setState({
-        moviesList: this.mergeResponseToOldRes(response, this.state.page),
-        isLoading: false
-      });
+      var response = await fetchPopularMoviesAsync(page);
+      setMoviesList(mergeResponseToOldRes(response, page));
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
-      this.setState({ error, isLoading: false });
+      setError(error);
+      setIsLoading(false);
     }
-  }
+  };
 
-  loadMore() {
-    this.setState(
-      (prevState, props) => ({
-        page: prevState.page + 1,
-        loadingMore: true
-      }),
-      () => {
-        this.fetchPopularMovies();
-      }
-    );
-  }
+  const loadMore = () => {
+    setPage(page + 1);
+    setLoadingMore(true);
+    fetchPopularMovies();
+  };
 
-  componentDidMount() {
+  useEffect(() => {
     console.log("componentDidMount");
-    this.fetchPopularMovies();
-  }
-  render() {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center"
-        }}
-      >
-        {this.state.isLoading && (
-          <ActivityIndicator size="large"></ActivityIndicator>
-        )}
-        {this.state.moviesList.length > 0 && (
-          <FlatList
-            numColumns={2}
-            data={this.state.moviesList}
-            keyExtractor={(item, index) => item.id}
-            renderItem={({ item }) => this.buildMoviePoster(item)}
-            onEndReached={() => this.loadMore()}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={this.renderLoadingFooter}
-          />
-        )}
-      </View>
-    );
-  }
-  buildMoviePoster(item) {
+    fetchPopularMovies();
+  }, []);
+
+  const buildMoviePoster = item => {
     var posterUrl = getImageLink(item.poster_path, 500);
     return (
       <TouchableOpacity
         onPress={() =>
-          this.props.navigation.push("MovieDetails", {
+          navigation.push("MovieDetails", {
             movieId: item.id,
             movieTitle: item.title
           })
@@ -97,10 +61,10 @@ export default class HomeScreen extends React.Component {
         ></Image>
       </TouchableOpacity>
     );
-  }
+  };
 
-  renderLoadingFooter = () => {
-    if (!this.state.loadingMore) return null;
+  const renderLoadingFooter = () => {
+    if (!loadingMore) return null;
 
     return (
       <View style={{ paddingVertical: 8 }}>
@@ -108,4 +72,26 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   };
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center"
+      }}
+    >
+      {isLoading && <ActivityIndicator size="large"></ActivityIndicator>}
+      {moviesList.length > 0 && (
+        <FlatList
+          numColumns={2}
+          data={moviesList}
+          keyExtractor={(item, index) => item.id}
+          renderItem={({ item }) => buildMoviePoster(item)}
+          onEndReached={() => loadMore()}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderLoadingFooter}
+        />
+      )}
+    </View>
+  );
 }

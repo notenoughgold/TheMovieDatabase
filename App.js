@@ -8,10 +8,17 @@ import { View, Image } from "react-native";
 import Constants from "expo-constants";
 import { AppLoading, SplashScreen } from "expo";
 import { Asset } from "expo-asset";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigation,
+  DarkTheme,
+  DefaultTheme,
+  useTheme
+} from "@react-navigation/native";
+import { AppearanceProvider, useColorScheme } from "react-native-appearance";
+
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-import { useNavigation } from "@react-navigation/native";
 
 import MovieDetailsScreen from "./screens/MovieDetailScreen";
 import AllCreditsScreen from "./screens/AllCreditScreen";
@@ -19,10 +26,13 @@ import PeopleDetailsScreen from "./screens/PeopleDetailsScreen";
 import BiographyScreen from "./screens/BiographyScreen";
 import MoviesScreen from "./screens/MoviesScreen";
 import TvShowsScreen from "./screens/TvShowsScreen";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 const Stack = createStackNavigator();
 
 function MoviesStack() {
+  const { colors } = useTheme();
   const navigation = useNavigation();
 
   return (
@@ -32,12 +42,14 @@ function MoviesStack() {
         component={MoviesScreen}
         options={{
           headerLeft: () => (
-            <MaterialIcons
-              size={24}
-              onPress={() => navigation.openDrawer()}
-              name="menu"
-              style={{ marginLeft: 10 }}
-            />
+            <TouchableOpacity onPress={() => navigation.openDrawer()}>
+              <MaterialIcons
+                color={colors.text}
+                size={24}
+                name="menu"
+                style={{ marginLeft: 16 }}
+              />
+            </TouchableOpacity>
           )
         }}
       ></Stack.Screen>
@@ -106,45 +118,40 @@ function CustomDrawerContent(props) {
 const Drawer = createDrawerNavigator();
 
 function NavContainer() {
+  const scheme = useColorScheme();
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        initialRouteName="Movies"
-        drawerContent={props => <CustomDrawerContent {...props} />}
+    <AppearanceProvider>
+      <NavigationContainer
+        theme={scheme === "light" ? DefaultTheme : DarkTheme}
       >
-        <Drawer.Screen
-          name="Movies"
-          component={MoviesStack}
-          options={{
-            drawerLabel: "Movies",
-            drawerIcon: ({ focused, color, size }) => (
-              <MaterialIcons color={color} size={size} name={"movie"} />
-            )
-          }}
-        />
-        <Drawer.Screen
-          name="TvShows"
-          component={TvShowsStack}
-          options={{
-            drawerLabel: "TV Shows",
-            drawerIcon: ({ focused, color, size }) => (
-              <MaterialIcons color={color} size={size} name={"tv"} />
-            )
-          }}
-        />
-      </Drawer.Navigator>
-    </NavigationContainer>
+        <Drawer.Navigator
+          initialRouteName="Movies"
+          drawerContent={props => <CustomDrawerContent {...props} />}
+        >
+          <Drawer.Screen
+            name="Movies"
+            component={MoviesStack}
+            options={{
+              drawerLabel: "Movies",
+              drawerIcon: ({ focused, color, size }) => (
+                <MaterialIcons color={color} size={size} name={"movie"} />
+              )
+            }}
+          />
+          <Drawer.Screen
+            name="TvShows"
+            component={TvShowsStack}
+            options={{
+              drawerLabel: "TV Shows",
+              drawerIcon: ({ focused, color, size }) => (
+                <MaterialIcons color={color} size={size} name={"tv"} />
+              )
+            }}
+          />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </AppearanceProvider>
   );
-}
-
-function cacheImages(images) {
-  return images.map(image => {
-    if (typeof image === "string") {
-      return Image.prefetch(image);
-    } else {
-      return Asset.fromModule(image).downloadAsync();
-    }
-  });
 }
 
 class LoaderContainer extends React.Component {

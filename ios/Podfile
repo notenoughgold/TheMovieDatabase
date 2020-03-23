@@ -32,4 +32,6 @@ target 'TheMovieDatabase' do
 
   use_unimodules!
 
+  pod 'react-native-appearance', :path => '../node_modules/react-native-appearance'
+
 end
